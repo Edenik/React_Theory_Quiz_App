@@ -18,6 +18,7 @@ function Quiz() {
   }, []);
 
   function getQuestions() {
+    setLoading(true);
     axios(API_URL).then((res) => {
       /* Random questions */
       const arr = [];
@@ -79,16 +80,19 @@ function Quiz() {
   }
 
   const questionList = questions.map((quest, questionIndex) => {
-    const question = new DOMParser().parseFromString(
+    // parse html from questions
+    const htmlQuestion = new DOMParser().parseFromString(
       quest.description4,
       "text/html"
     );
 
-    const options = question.getElementsByTagName("li");
-    let image = question.getElementsByTagName("img");
+    // parse li and img tags from html
+    const options = htmlQuestion.getElementsByTagName("li");
+    let image = htmlQuestion.getElementsByTagName("img");
     image[0] ? (image = image[0].outerHTML) : (image = null);
-    let correctAnswer;
 
+    // check for correct answer
+    let correctAnswer;
     for (let index = 0; index <= 3; index++) {
       const element = [].slice.call(options)[index];
       if (element.innerHTML.includes("correct")) {
@@ -111,34 +115,34 @@ function Quiz() {
   });
 
   let quiz = (
-    <div style={{ textAlign: "right" }}>
-      <div style={{ textAlign: "center", marginTop: "15px" }}>
-        <QuizButtons
-          checkQuiz={() => onCheckQuiz()}
-          getQuestions={() => getQuestions()}
-          scrollText="למטה"
-          scrollAxis={document.body.scrollHeight}
-        />
-      </div>
-
-      {questionList}
-
-      <div style={{ textAlign: "center", marginBottom: "15px" }}>
-        <QuizButtons
-          checkQuiz={() => onCheckQuiz()}
-          getQuestions={() => getQuestions()}
-          scrollText="למעלה"
-          scrollAxis="0"
-        />
-      </div>
+    <div style={{ textAlign: "center" }}>
+      <h1>טוען</h1>
+      <Spinner animation="border" />
     </div>
   );
 
-  if (loading) {
+  if (!loading) {
     quiz = (
-      <div style={{ textAlign: "center" }}>
-        <h1>טוען</h1>
-        <Spinner animation="border" />
+      <div style={{ textAlign: "right" }}>
+        <div style={{ textAlign: "center", marginTop: "15px" }}>
+          <QuizButtons
+            checkQuiz={() => onCheckQuiz()}
+            getQuestions={() => getQuestions()}
+            scrollText="למטה"
+            scrollAxis={document.body.scrollHeight}
+          />
+        </div>
+
+        {questionList}
+
+        <div style={{ textAlign: "center", marginBottom: "15px" }}>
+          <QuizButtons
+            checkQuiz={() => onCheckQuiz()}
+            getQuestions={() => getQuestions()}
+            scrollText="למעלה"
+            scrollAxis="0"
+          />
+        </div>
       </div>
     );
   }
