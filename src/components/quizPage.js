@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
+import axios from "axios";
+
 import QuestionCard from "./questionCard";
 import QuizButtons from "./quizButtons";
 
-const LIMIT = 4;
+const LIMIT = 20;
 const API_URL = `https://data.gov.il/api/3/action/datastore_search?resource_id=bf7cb748-f220-474b-a4d5-2d59f93db28d`;
 
 function Quiz() {
@@ -16,35 +18,32 @@ function Quiz() {
   }, []);
 
   function getQuestions() {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        /* Random questions */
-        const arr = [];
-        const randomQuestionsArr = [];
+    axios(API_URL).then((res) => {
+      /* Random questions */
+      const arr = [];
+      const randomQuestionsArr = [];
 
-        while (arr.length < LIMIT) {
-          const r = Math.floor(Math.random() * 100);
-          if (arr.indexOf(r) === -1) {
-            arr.push(r);
-            randomQuestionsArr.push(data.result.records[r]);
-          }
+      while (arr.length < LIMIT) {
+        const r = Math.floor(Math.random() * 100);
+        if (arr.indexOf(r) === -1) {
+          arr.push(r);
+          randomQuestionsArr.push(res.data.result.records[r]);
         }
-        /* Random questions */
+      }
+      /* Random questions */
 
-        setQuestions(randomQuestionsArr);
+      setQuestions(randomQuestionsArr);
 
-        setLoading(false);
+      setLoading(false);
 
-        /* Set answers arr with null values */
-        const answersArr = [];
-        for (let index = 0; index < randomQuestionsArr.length; index++) {
-          answersArr.push(null);
-        }
-        /* Set answers arr with null values */
-
-        setAnswers(answersArr);
-      });
+      /* Set answers arr with null values */
+      const answersArr = [];
+      for (let index = 0; index < randomQuestionsArr.length; index++) {
+        answersArr.push(null);
+      }
+      setAnswers(answersArr);
+      /* Set answers arr with null values */
+    });
   }
 
   function onChangeAnswer(questionIndex, answer, correctAnswer) {
@@ -57,6 +56,7 @@ function Quiz() {
     let correctCounter = 0;
     let wrongCounter = 0;
     let notAnsweredCounter = 0;
+
     answers.forEach((answer, index) => {
       if (!answer) {
         document.getElementById(`card:${index}`).style.backgroundColor = "pink";

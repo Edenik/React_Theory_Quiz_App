@@ -3,20 +3,20 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
 function QuizButtons(props) {
-  let scrollIcon = <i class="fas fa-arrow-up ml-2"></i>;
+  let scrollIcon = <i className="fas fa-arrow-up ml-2"></i>;
   if (props.scrollText === "למטה") {
-    scrollIcon = <i class="fas fa-arrow-down ml-2"></i>;
+    scrollIcon = <i className="fas fa-arrow-down ml-2"></i>;
   }
 
   return (
     <>
       <Button variant="dark" onClick={props.checkQuiz}>
-        <i class="fas fa-clipboard-check ml-2"></i>
+        <i className="fas fa-clipboard-check ml-2"></i>
         בדוק
       </Button>
 
       <Button variant="secondary" onClick={props.getQuestions}>
-        <i class="fas fa-retweet ml-2"></i>
+        <i className="fas fa-retweet ml-2"></i>
         החלף שאלות
       </Button>
 
@@ -36,7 +36,7 @@ function QuizButtons(props) {
 
       <Link to="/">
         <Button variant="secondary">
-          <i class="fas fa-home ml-2"></i>
+          <i className="fas fa-home ml-2"></i>
           דף הבית
         </Button>
       </Link>
