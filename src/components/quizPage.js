@@ -5,7 +5,7 @@ import axios from "axios";
 import QuestionCard from "./questionCard";
 import QuizButtons from "./quizButtons";
 
-const LIMIT = 20;
+const LIMIT = 10;
 const API_URL = `https://data.gov.il/api/3/action/datastore_search?resource_id=bf7cb748-f220-474b-a4d5-2d59f93db28d`;
 
 function Quiz() {
