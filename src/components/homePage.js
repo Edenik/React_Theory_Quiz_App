@@ -1,6 +1,7 @@
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
+import logo from "../assets/images/logo.png";
 
 import React from "react";
 
@@ -11,8 +12,12 @@ function HomePage() {
         <Card.Body>
           <h1>תיאוריה אונליין</h1>
 
+          <p>
+            <img src={logo} alt="" />
+          </p>
+
           <Link to="/quiz">
-            <Button variant="secondary">התחל מבחן!</Button>
+            <Button variant="dark">התחל מבחן!</Button>
           </Link>
         </Card.Body>
       </Card>

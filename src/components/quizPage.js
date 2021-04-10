@@ -54,16 +54,28 @@ function Quiz() {
   }
 
   function onCheckQuiz() {
+    let correctCounter = 0;
+    let wrongCounter = 0;
+    let notAnsweredCounter = 0;
     answers.forEach((answer, index) => {
       if (!answer) {
         document.getElementById(`card:${index}`).style.backgroundColor = "pink";
+        notAnsweredCounter++;
       } else if (answer.answer !== answer.correctAnswer) {
         document.getElementById(`card:${index}`).style.backgroundColor = "red";
+        wrongCounter++;
       } else {
         document.getElementById(`card:${index}`).style.backgroundColor =
           "green";
+        correctCounter++;
       }
     });
+
+    setTimeout(() => {
+      alert(
+        `המבחן כולל ${LIMIT} שאלות: \n${correctCounter} שאלות נענו נכון \n${wrongCounter} שאלות נענו לא נכון \n${notAnsweredCounter} שאלות לא נענו`
+      );
+    }, 100);
   }
 
   const questionList = questions.map((quest, questionIndex) => {

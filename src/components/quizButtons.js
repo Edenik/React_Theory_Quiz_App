@@ -10,7 +10,7 @@ function QuizButtons(props) {
 
   return (
     <>
-      <Button variant="primary" onClick={props.checkQuiz}>
+      <Button variant="dark" onClick={props.checkQuiz}>
         <i class="fas fa-clipboard-check ml-2"></i>
         בדוק
       </Button>
