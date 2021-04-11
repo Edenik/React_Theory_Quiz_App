@@ -33,14 +33,42 @@ function Quiz() {
       }
       /* Random questions */
 
-      setQuestions(randomQuestionsArr);
+      /* Convert Questions objects */
+      const questionsArr = randomQuestionsArr.map((quest) => {
+        const htmlQuestion = new DOMParser().parseFromString(
+          quest.description4,
+          "text/html"
+        );
+
+        // parse li and img tags from html
+        const options = htmlQuestion.getElementsByTagName("li");
+        let image = htmlQuestion.getElementsByTagName("img");
+        const title = quest.title2;
+        image[0] ? (image = image[0].outerHTML) : (image = null);
+
+        // check for correct answer
+        let correctAnswer;
+        for (let index = 0; index <= 3; index++) {
+          const element = [].slice.call(options)[index];
+          if (element.innerHTML.includes("correct")) {
+            correctAnswer = index;
+          }
+        }
+        return { options, image, title, correctAnswer };
+      });
+      /* Convert Questions objects */
+
+      setQuestions(questionsArr);
 
       setLoading(false);
 
       /* Set answers arr with null values */
       const answersArr = [];
-      for (let index = 0; index < randomQuestionsArr.length; index++) {
-        answersArr.push(null);
+      for (let i = 0; i < questionsArr.length; i++) {
+        answersArr.push({
+          answer: null,
+          correctAnswer: questionsArr[i].correctAnswer,
+        });
       }
       setAnswers(answersArr);
       /* Set answers arr with null values */
@@ -49,7 +77,7 @@ function Quiz() {
 
   function onChangeAnswer(questionIndex, answer, correctAnswer) {
     const answersArr = [...answers];
-    answersArr[questionIndex] = { answer, correctAnswer };
+    answersArr[questionIndex]["answer"] = answer;
     setAnswers(answersArr);
   }
 
@@ -59,17 +87,21 @@ function Quiz() {
     let notAnsweredCounter = 0;
 
     answers.forEach((answer, index) => {
-      if (!answer) {
+      if (answer.answer === answer.correctAnswer) {
+        document.getElementById(`card:${index}`).style.backgroundColor =
+          "greenyellow";
+        correctCounter++;
+      } else if (!answer.answer) {
         document.getElementById(`card:${index}`).style.backgroundColor = "pink";
         notAnsweredCounter++;
-      } else if (answer.answer !== answer.correctAnswer) {
+      } else {
         document.getElementById(`card:${index}`).style.backgroundColor = "red";
         wrongCounter++;
-      } else {
-        document.getElementById(`card:${index}`).style.backgroundColor =
-          "green";
-        correctCounter++;
       }
+
+      document.getElementById(
+        `p-question:${index}answer:${answer.correctAnswer}`
+      ).style.backgroundColor = "greenyellow";
     });
 
     setTimeout(() => {
@@ -80,35 +112,15 @@ function Quiz() {
   }
 
   const questionList = questions.map((quest, questionIndex) => {
-    // parse html from questions
-    const htmlQuestion = new DOMParser().parseFromString(
-      quest.description4,
-      "text/html"
-    );
-
-    // parse li and img tags from html
-    const options = htmlQuestion.getElementsByTagName("li");
-    let image = htmlQuestion.getElementsByTagName("img");
-    image[0] ? (image = image[0].outerHTML) : (image = null);
-
-    // check for correct answer
-    let correctAnswer;
-    for (let index = 0; index <= 3; index++) {
-      const element = [].slice.call(options)[index];
-      if (element.innerHTML.includes("correct")) {
-        correctAnswer = index;
-      }
-    }
-
     return (
       <QuestionCard
-        key={quest.title2}
+        key={quest.title}
         questionIndex={questionIndex}
-        title={quest.title2}
-        image={image}
-        options={options}
+        title={quest.title}
+        image={quest.image}
+        options={quest.options}
         onChange={(e) =>
-          onChangeAnswer(questionIndex, e.target.value * 1, correctAnswer)
+          onChangeAnswer(questionIndex, e.target.value * 1, quest.correctAnswer)
         }
       ></QuestionCard>
     );

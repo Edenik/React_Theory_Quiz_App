@@ -17,17 +17,20 @@ function QuestionCard(props) {
         <div onChange={props.onChange}>
           {[].slice.call(props.options).map((option, index) => {
             return (
-              <p key={index}>
+              <p
+                key={index}
+                id={`p-question:${props.questionIndex}answer:${index}`}
+              >
                 <input
                   type="radio"
                   value={index}
                   name={props.questionIndex}
-                  id={`question:${props.questionIndex}answer:${index}`}
+                  id={`input-question:${props.questionIndex}answer:${index}`}
                   className="ml-2"
                 />
                 <label
                   style={{ display: "inline" }}
-                  htmlFor={`question:${props.questionIndex}answer:${index}`}
+                  htmlFor={`input-question:${props.questionIndex}answer:${index}`}
                 >
                   {option.innerHTML.replace(/<\/?[^>]+(>|$)/g, "")}
                 </label>
